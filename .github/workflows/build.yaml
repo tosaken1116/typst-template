@@ -1,0 +1,58 @@
+name: Build Typst document
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docs/**/*
+      - main.typ
+      - env.typ
+
+env:
+  GOOGLE_DRIVE_UPLOAD_DIRECTORY: /research/report
+  TZ: Asia/Tokyo
+
+jobs:
+  build_typst_documents:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache Typst binary
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/bin/typst
+          key: ${{ runner.os }}-typst-bin-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-typst-bin-
+
+      - name: Set up Typst
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt update -y
+          sudo apt install -y fonts-ipafont
+          cargo install --git https://github.com/typst/typst --locked typst-cli
+
+      - name: Verify Typst Installation
+        run: typst --version
+
+      - name: Build Typst Document
+        run: typst compile main.typ
+
+      - name: Get current date in JST
+        id: date
+        run: |
+          export TZ=$TZ
+          echo "DATE=$(date +%Y-%m-%d-%H:%M)" >> $GITHUB_ENV
+
+      - name: Rename file
+        run: mkdir exports && mv main.pdf exports/${{ env.DATE }}.pdf
+
+      - name: Upload to Google Drive
+        uses: adityak74/google-drive-upload-git-action@main
+        with:
+          credentials: ${{ secrets.GOOGLE_DRIVE_SECRET }}
+          filename: "exports/*.pdf"
+          folderId: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}

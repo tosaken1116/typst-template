@@ -1,0 +1,5 @@
+pre-commit:
+  commands:
+    backend-linter:
+      glob: "*.typst"
+      run: task fmt

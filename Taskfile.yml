@@ -1,0 +1,29 @@
+version: "3"
+
+tasks:
+  default:
+    desc: Run the default task
+    cmds:
+      - task -l
+
+  compile:
+    desc: Builds the typst document
+    deps:
+      - fmt
+    cmds:
+      - mkdir -p exports && typst compile main.typ exports/main.pdf
+  compile:watch:
+    desc: Builds the typst document on change
+    cmds:
+      - mkdir -p exports && typst watch main.typ exports/main.pdf
+  commit:
+    cmds:
+      - cz
+  fmt:
+    desc: Format all typ files
+    cmds:
+      - typstyle format-all libs
+      - typstyle format-all main.typ
+      - typstyle format-all env.typ
+      - typstyle format-all docs
+    silent: true
