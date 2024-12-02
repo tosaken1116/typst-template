@@ -24,3 +24,37 @@
 
 - GOOGLE_DRIVE_SECRET: google drive api を有効化したサービスアカウントの json ファイルを base64 エンコードしたもの
 - GOOGLE_DRIVE_FOLDER_ID: ファイルをアップロードするフォルダの ID
+
+## ディレクトリ構成
+
+```
+.
+├── .cz-config.js
+├── .czrc
+├── .github
+│   └── workflows
+│       └── build.yaml
+├── .gitignore
+├── README.md
+├── Taskfile.yml
+├── docs
+│   ├── abstract.typ
+│   └── chapters
+│       └── chapter1.typ
+├── env.typ
+├── init.sh
+├── lefthook.yml
+├── libs
+│   ├── abstract.typ
+│   ├── config.typ
+│   ├── cover.typ
+│   ├── index.typ
+│   └── template.typ
+└── main.typ
+```
+
+## 編集箇所 typst
+
+`env.typ` に著者情報を設定してください
+
+`docs`ディレクトリに章ごとのファイルを作成してください
