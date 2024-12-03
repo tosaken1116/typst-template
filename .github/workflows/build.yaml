@@ -35,6 +35,19 @@ jobs:
           sudo apt install -y fonts-ipafont
           cargo install --git https://github.com/typst/typst --locked typst-cli
 
+      - name: Cache fonts
+        id: cache-fonts
+        uses: actions/cache@v3
+        with:
+          path: /usr/share/fonts/
+          key: ${{ runner.os }}-fonts-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-fonts-
+      - name: install fonts
+        if: steps.cache-fonts.outputs.cache-hit != 'true'
+        run: |
+          sudo apt update -y
+          sudo apt install -y fonts-ipafont
       - name: Verify Typst Installation
         run: typst --version
 
