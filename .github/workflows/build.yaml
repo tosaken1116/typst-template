@@ -7,6 +7,8 @@ on:
       - docs/**/*
       - main.typ
       - env.typ
+      - .github/workflows/build.yaml
+  workflow_dispatch:
 
 env:
   GOOGLE_DRIVE_UPLOAD_DIRECTORY: /research/report
